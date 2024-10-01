@@ -9,5 +9,5 @@ payload = b'{"key":"value"}'
 
 # Create the HMAC SHA-256 signature
 signature = 'sha256=' + hmac.new(secret, payload, hashlib.sha256).hexdigest()
-print(payload)
+
 print(signature)
