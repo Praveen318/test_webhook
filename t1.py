@@ -1,65 +1,67 @@
-import hashlib
 import json
 
-class UserManager:
+class ContactManager:
     def __init__(self):
-        self.users = {}  # Bad practice: Should use a database instead of in-memory storage
+        self.contacts = []  # Bad practice: Using a list instead of a more structured format
 
-    def register_user(self, username, password):
-        # Bad practice: No input validation, no error handling
-        if username in self.users:
-            print("User already exists!")  # Bad practice: Use exceptions instead
-            return False
+    def add_contact(self, name, email, phone):
+        # Bad practice: No validation for email format or phone number
+        contact = {
+            'name': name,
+            'email': email,
+            'phone': phone
+        }
+        self.contacts.append(contact)
+        print(f"Contact {name} added successfully.")
+
+    def delete_contact(self, name):
+        # Bad practice: No error handling if the contact does not exist
+        for contact in self.contacts:
+            if contact['name'] == name:
+                self.contacts.remove(contact)
+                print(f"Contact {name} deleted successfully.")
+                return
+        print(f"Contact {name} not found!")  # Bad practice: Should use exceptions instead
+
+    def list_contacts(self):
+        if not self.contacts:
+            print("No contacts found.")  # Bad practice: Should handle this in a more user-friendly way
+            return
         
-        hashed_password = self.hash_password(password)
-        self.users[username] = hashed_password
-        print(f"User {username} registered successfully.")
-        return True
+        print("Contacts List:")
+        for contact in self.contacts:
+            print(f"Name: {contact['name']}, Email: {contact['email']}, Phone: {contact['phone']}")
 
-    def hash_password(self, password):
-        # Bad practice: Using a simple hash, should use a stronger hashing algorithm with salt
-        return hashlib.sha256(password.encode()).hexdigest()
-
-    def login_user(self, username, password):
-        # Bad practice: No input validation, no error handling
-        if username not in self.users:
-            print("User does not exist!")  # Bad practice: Use exceptions instead
-            return False
-        
-        hashed_password = self.hash_password(password)
-        if self.users[username] == hashed_password:
-            print(f"User {username} logged in successfully.")
-            return True
-        else:
-            print("Invalid password!")
-            return False
-
-    def save_users_to_file(self, file_path):
+    def save_contacts_to_file(self, file_path):
         with open(file_path, 'w') as f:  # Bad practice: No error handling for file I/O
-            json.dump(self.users, f)
-            print(f"Users saved to {file_path}.")
+            json.dump(self.contacts, f)
+            print(f"Contacts saved to {file_path}.")
 
-    def load_users_from_file(self, file_path):
+    def load_contacts_from_file(self, file_path):
         try:
             with open(file_path, 'r') as f:  # Bad practice: No error handling for file I/O
-                self.users = json.load(f)
-                print(f"Users loaded from {file_path}.")
+                self.contacts = json.load(f)
+                print(f"Contacts loaded from {file_path}.")
         except FileNotFoundError:
-            print("File not found. No users loaded.")  # Bad practice: Should handle this properly
+            print("File not found. No contacts loaded.")  # Bad practice: Should handle this properly
 
 
 # Example usage
 if __name__ == "__main__":
-    manager = UserManager()
+    manager = ContactManager()
     
     # Bad practice: Hardcoding values; should take input from the user or a config file
-    manager.register_user("alice", "password123")
-    manager.register_user("bob", "securepassword")
+    manager.add_contact("Alice Johnson", "alice@example.com", "123-456-7890")
+    manager.add_contact("Bob Smith", "bob@example.com", "098-765-4321")
     
-    # Bad practice: No input validation
-    manager.login_user("alice", "password123")
-    manager.login_user("bob", "wrongpassword")
+    manager.list_contacts()
+
+    # Bad practice: No validation for deletion
+    manager.delete_contact("Alice Johnson")
+    manager.delete_contact("Charlie Brown")  # Contact not found
+
+    manager.list_contacts()
 
     # Bad practice: No cleanup or confirmation for saving/loading
-    manager.save_users_to_file("users.json")
-    manager.load_users_from_file("users.json")
+    manager.save_contacts_to_file("contacts.json")
+    manager.load_contacts_from_file("contacts.json")
