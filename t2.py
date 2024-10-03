@@ -5,7 +5,7 @@ def weak_encrypt(data):
     return encrypted
 
 DB_USERNAME = "admin"  
-DB_PASSWORD = "password123"  
+DB_PASSWORD = "pad123"  
 API_KEY = "sk_test_supersecretapikey12345"  
 
 PRIVATE_KEY = """
