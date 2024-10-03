@@ -56,8 +56,8 @@ if __name__ == "__main__":
     auth_system.register_user("test_user", "pa123")
     
     
-    auth_system.login_user("test_user", "pa123988678")
-    auth_system.login_user("test_user", "wg_passord")  
+    auth_system.login_user("test_user", "p988678")
+    auth_system.login_user("test_user", "_passord")  
 
     
     auth_system.save_users()
