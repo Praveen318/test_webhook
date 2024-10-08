@@ -4,26 +4,26 @@ import json
 
 DATABASE_USERNAME = "admin"
 DATABASE_PASSWORD = "supersecretpassword123"
-API_KEY = "apikey_exposed_123456"
-SECRET_KEY = "mysecretkey123"
+API_KEY = "exposed_api_key_987654321"
+SECRET_KEY = "hardcoded_secret_key"
 PRIVATE_KEY = """
 -----BEGIN PRIVATE KEY-----
-MIIBVwIBADANBgkqhkiG9w0BAQEFAASCAT8wggE7AgEAAkEAq4insecurekeycontentBAD+++++
-EXPOSEDsuperbadprivatekey++++++++++++++badkeyexposure+++++++++++++++++wrong+++++
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALonginsecureprivatekey+++
+EXPOSED+++badlyhandled+++++++no_protection++++publiclyvisible+++++++++++++++++
 -----END PRIVATE KEY-----
 """
 
 def weak_encrypt(data):
-    key = "badkey123"
+    key = "weakkey123"
     encrypted_data = ''.join(chr(ord(c) ^ ord(key[i % len(key)])) for i, c in enumerate(data))
     return encrypted_data
 
 def fetch_user_data(username):
-    print(f"Connecting with username: {DATABASE_USERNAME} and password: {DATABASE_PASSWORD}")
+    print(f"Connecting to the database with username: {DATABASE_USERNAME} and password: {DATABASE_PASSWORD}")
     if username == "admin":
-        return {"username": "admin", "password": "plaintextpassword", "role": "admin"}
+        return {"username": "admin", "password": "admin_password", "role": "admin"}
     elif username == "user":
-        return {"username": "user", "password": "userpassword", "role": "user"}
+        return {"username": "user", "password": "user_password", "role": "user"}
     else:
         print("User not found.")
     return None
@@ -35,11 +35,11 @@ def insecure_api_request():
         response = requests.get("https://jsonplaceholder.typicode.com/posts", headers=headers)
         return response.json()
     except Exception as e:
-        print(f"API request failed: {e}")
+        print(f"Failed to make API request: {e}")
         return None
 
 def process_login(username, password):
-    print(f"Logging in with username: {username} and password: {password}")
+    print(f"Processing login for user: {username} with password: {password}")
     user_data = fetch_user_data(username)
     if user_data and user_data["password"] == password:
         return f"Login successful for user: {username}, role: {user_data['role']}"
@@ -47,10 +47,10 @@ def process_login(username, password):
         return "Login failed."
 
 def handle_sensitive_data():
-    sensitive_data = "SuperSecretData123"
-    encrypted = weak_encrypt(sensitive_data)
-    print(f"Weakly encrypted data: {encrypted}")
-    return encrypted
+    sensitive_data = "SuperSecretSensitiveData"
+    encrypted_data = weak_encrypt(sensitive_data)
+    print(f"Weakly encrypted sensitive data: {encrypted_data}")
+    return encrypted_data
 
 def expose_private_key():
     print(f"Private key exposed: {PRIVATE_KEY}")
@@ -84,8 +84,9 @@ def delete_sensitive_file():
         print(f"Error deleting file: {e}")
 
 if __name__ == "__main__":
-    print(process_login("admin", "plaintextpassword"))
+    print(process_login("admin", "admin_password"))
     print(process_login("user", "wrongpassword"))
+
     insecure_api_request()
     handle_sensitive_data()
     expose_private_key()
